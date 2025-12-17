@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="sr-Latn-ME">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GeoCulture</title>
+  <meta name="description" content="GeoCulture povezuje umjetnička djela i kulturnu baštinu sa geografskim lokacijama njihovog nastanka, prikaza ili značenja." />
+
+  <style>
+    :root{
+      --bg:#fbfbfa;
+      --fg:#121212;
+      --muted:#5a5a5a;
+      --line:#e7e7e2;
+      --card:#ffffff;
+      --max:1120px;
+      --radius:18px;
+      --shadow: 0 14px 40px rgba(0,0,0,.06);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg);
+      color:var(--fg);
+      line-height:1.5;
+      letter-spacing:.1px;
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
+    .grid{display:grid; gap:18px;}
+    .two{grid-template-columns: 1.1fr .9fr; align-items:start;}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 14px;
+      border:1px solid var(--fg);
+      border-radius:999px;
+      text-decoration:none;
+      font-size:14px;
+      transition:transform .12s ease, background .12s ease, color .12s ease;
+    }
+    .btn:hover{transform:translateY(-1px); background:var(--fg); color:var(--bg);}
+    .btn.secondary{border-color:var(--line)}
+    .btn.secondary:hover{background:transparent; color:var(--fg); border-color:var(--fg);}
+
+    /* Topbar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(150%) blur(10px);
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 0;
+      gap:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      min-width: 220px;
+    }
+    .brand .logo{
+      height:34px;
+      width:auto;
+      display:block;
+    }
+    .brand b{font-weight:750; letter-spacing:.25px}
+    .brand span{color:var(--muted); font-size:13px}
+    nav{display:flex; gap:14px; flex-wrap:wrap; justify-content:flex-end}
+    nav a{
+      font-size:13px; color:var(--muted);
+      text-decoration:none;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid transparent;
+    }
+    nav a:hover{color:var(--fg); border-color:var(--line); background:var(--card);}
+
+    /* Hero */
+    .hero{padding:48px 0 26px}
+    .kicker{
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+    .hero h1{
+      font-size: clamp(34px, 5vw, 58px);
+      line-height:1.03;
+      margin:0 0 12px;
+      letter-spacing:-.6px;
+    }
+    .hero p{
+      max-width: 76ch;
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size: clamp(15px, 1.7vw, 18px);
+    }
+    .hero-actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .meta{
+      margin-top:18px;
+      display:flex; gap:10px; flex-wrap:wrap;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .pill{
+      display:inline-flex; align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:var(--card);
+    }
+
+    /* Sections */
+    section.content{padding: 34px 0; border-top:1px solid var(--line);}
+    h2{margin:0 0 10px; font-size:20px; letter-spacing:-.2px;}
+    .lead{margin:0 0 10px; color:var(--muted); max-width:80ch;}
+    .fine{color:var(--muted); font-size:13px; margin:0;}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding:16px;
+      box-shadow: var(--shadow);
+    }
+    ul.clean{
+      margin:10px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    ul.clean li{
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--card) 80%, var(--bg));
+    }
+
+    /* Map */
+    .map{padding: 18px 0 34px;}
+    .map-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .map-head{
+      display:flex; gap:12px; align-items:flex-start; justify-content:space-between;
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+    }
+    .map-head h2{margin:0; font-size:16px; letter-spacing:.2px}
+    .map-head p{margin:4px 0 0; color:var(--muted); font-size:13px; max-width:72ch}
+    .map-frame{
+      width:100%;
+      height: min(72vh, 760px);
+      border:0;
+      display:block;
+      background: #f3f3ef;
+    }
+    .map-foot{
+      display:flex; gap:10px; justify-content:space-between; align-items:center;
+      padding:12px 16px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:12px;
+      flex-wrap:wrap;
+    }
+
+    /* Support block (in About) */
+    .support-card{
+      margin-top:14px;
+      padding:16px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .support-kicker{
+      font-size:11px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      margin-bottom:10px;
+    }
+    .support-row{
+      display:flex;
+      gap:16px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .support-logo{
+      height:56px;
+      width:auto;
+      flex-shrink:0;
+      display:block;
+    }
+    .support-title{
+      font-size:15px;
+      font-weight:650;
+      letter-spacing:.2px;
+    }
+    .support-note{
+      margin-top:4px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    /* Collaborators: logo + name (vertical list) */
+    .collab-list{
+      list-style:none;
+      margin:24px 0 0;
+      padding:0;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+      max-width: 860px;
+    }
+    .collab-item{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:var(--card);
+    }
+    .collab-item img{
+      height:40px;
+      width:auto;
+      flex-shrink:0;
+      display:block;
+      opacity:0.95;
+    }
+    .collab-item span{
+      font-size:15px;
+      color:var(--fg);
+    }
+
+    /* Partners: logos only (horizontal row) */
+    .logo-row{
+      margin-top:22px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:28px;
+      align-items:center;
+    }
+    .logo-row img{
+      height:44px;
+      width:auto;
+      display:block;
+      opacity:0.85;
+      filter: grayscale(0%);
+    }
+
+    /* Footer */
+    footer{
+      border-top:1px solid var(--line);
+      padding: 26px 0 40px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .footer-grid{
+      display:grid;
+      gap:14px;
+      grid-template-columns: 1.2fr .8fr;
+      align-items:start;
+    }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+
+    @media (max-width: 900px){
+      .two{grid-template-columns: 1fr;}
+      nav{display:none;}
+      .map-frame{height: 68vh;}
+      .footer-grid{grid-template-columns:1fr;}
+      .brand{min-width:auto;}
+      .brand .logo{height:30px;}
+      .collab-item img{height:36px;}
+      .logo-row img{height:40px;}
+      .support-logo{height:52px;}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#top" aria-label="GeoCulture početna">
+        <!-- promijeni fajl po potrebi -->
+        <img class="logo" src="assets/img/geoculture-logo.png" alt="GeoCulture logo">
+        <div>
+          <b>GeoCulture</b>
+          <span>kultura u prostoru</span>
+        </div>
+      </a>
+
+      <nav aria-label="Navigacija">
+        <a href="#mapa">Mapa</a>
+        <a href="#o-projektu">O projektu</a>
+        <a href="#saradnje">Saradnje</a>
+        <a href="#partneri">Partneri</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main id="top" class="wrap">
+    <section class="hero">
+      <div class="kicker">Digitalna humanistika · vizuelne studije · GIS</div>
+      <h1>GeoCulture</h1>
+      <p>
+        GeoCulture povezuje umjetnička djela i kulturnu baštinu sa geografskim lokacijama njihovog nastanka,
+        prikaza ili značenja — sa fokusom na kulturni pejzaž Crne Gore.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn" href="#mapa">Istraži mapu</a>
+        <a class="btn secondary" href="#o-projektu">O projektu</a>
+      </div>
+
+      <div class="meta" aria-label="Brze informacije">
+        <span class="pill">Map-first</span>
+        <span class="pill">Konzizno</span>
+        <span class="pill">Modularno</span>
+        <span class="pill">Otvoreni podaci (gdje je moguće)</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- MAP -->
+  <section id="mapa" class="map">
+    <div class="wrap">
+      <div class="map-card">
+        <div class="map-head">
+          <div>
+            <h2>Interaktivna mapa</h2>
+            <p>
+              Mapa je centralni interfejs projekta: unosi povezuju djelo, autora, period, tehniku,
+              interpretaciju i lokaciju (tačnu ili približnu).
+            </p>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <a class="btn secondary"
+               href="https://umap.openstreetmap.fr/en/map/oktobar-20_1296017"
+               target="_blank" rel="noopener">
+              Otvori u novom tabu
+            </a>
+          </div>
+        </div>
+
+        <iframe
+          class="map-frame"
+          title="GeoCulture uMap"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://umap.openstreetmap.fr/en/map/oktobar-20_1296017?scaleControl=true&miniMap=false&scrollWheelZoom=false&zoomControl=true&editInOSM=false">
+        </iframe>
+
+        <div class="map-foot">
+          <span>Tip: scroll zoom je isključen radi lakšeg skrolovanja stranice.</span>
+          <span>© GeoCulture</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="o-projektu" class="content">
+    <div class="wrap grid two">
+      <div>
+        <h2>O projektu</h2>
+        <p class="lead">
+          GeoCulture istražuje odnos kulture i prostora: kako se pejzaž pojavljuje u umjetnosti,
+          kako se kulturni sadržaji geografski raspoređuju, i kako mapa može postati alat za učenje,
+          istraživanje i javnu dostupnost.
+        </p>
+        <p class="fine">
+          Projekat je osmišljen modularno, tako da se u narednim fazama mogu dodavati novi slojevi
+          (npr. arheološka baština, filmske lokacije, savremene intervencije).
+        </p>
+
+        <!-- SUPPORT (istaknuto) -->
+        <div class="support-card" aria-label="Podrška">
+          <div class="support-kicker">Uz podršku</div>
+          <div class="support-row">
+            <img
+              src="assets/img/support/ministarstvo-kulture-i-medija-cg.png"
+              alt="Vlada Crne Gore – Ministarstvo kulture i medija"
+              class="support-logo">
+            <div>
+              <div class="support-title">Ministarstvo kulture i medija Crne Gore</div>
+              <div class="support-note">Podrška razvoju tehničke platforme projekta GeoCulture</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="kicker">Šta mapiramo (trenutna faza)</div>
+        <ul class="clean">
+          <li>Umjetnička djela (slike, crteži, grafike, fotografije) sa motivima Crne Gore</li>
+          <li>Radovi iz muzejskih zbirki, online baza i privatnih kolekcija (gdje je dostupno)</li>
+          <li>Svaki unos: osnovni metapodaci + reprodukcija + lokacija + kratki interpretativni opis</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLABORATORS (logo + name) -->
+  <section id="saradnje" class="content">
+    <div class="wrap">
+      <h2>Institucije sa kojima je ostvarena saradnja</h2>
+      <p class="lead">
+        Institucije su navedene prema nivou (nacionalni–lokalni–regionalni) i obimu saradnje u okviru projekta.
+      </p>
+
+      <ul class="collab-list">
+        <!-- 1) Nacionalni nivo (CG) -->
+        <li class="collab-item">
+          <img src="assets/img/collaborators/narodni-muzej-crne-gore.png" alt="">
+          <span>Narodni muzej Crne Gore</span>
+        </li>
+
+        <!-- 2) Lokalni nivo (CG) -->
+        <li class="collab-item">
+          <img src="assets/img/collaborators/muzeji-i-galerije-podgorice.png" alt="">
+          <span>JU Muzeji i galerije Podgorice</span>
+        </li>
+
+        <!-- 3) Regionalne saradnje -->
+        <li class="collab-item">
+          <img src="assets/img/collaborators/muzej-nikole-tesle-beograd.png" alt="">
+          <span>Muzej Nikole Tesle, Beograd</span>
+        </li>
+
+        <li class="collab-item">
+          <img src="assets/img/collaborators/umjetnicka-galerija-bih.png" alt="">
+          <span>Umjetnička galerija Bosne i Hercegovine, Sarajevo</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PARTNERS (logos only) -->
+  <section id="partneri" class="content">
+    <div class="wrap">
+      <h2>Partneri projekta</h2>
+      <p class="lead">
+        Partneri projekta (logotipi).
+      </p>
+
+      <div class="logo-row" aria-label="Partneri">
+        <!-- Zamijeni imenima partner logo fajlova -->
+        <img src="assets/img/partners/partner-01.png" alt="Partner 1">
+        <img src="assets/img/partners/partner-02.png" alt="Partner 2">
+        <img src="assets/img/partners/partner-03.png" alt="Partner 3">
+        <img src="assets/img/partners/partner-04.png" alt="Partner 4">
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="kontakt">
+    <div class="wrap footer-grid">
+      <div>
+        <b style="color:var(--fg)">GeoCulture</b>
+        <p class="fine" style="margin-top:6px">
+          Digitalna mapa kulturnog pejzaža Crne Gore.
+        </p>
+        <p class="fine" style="margin-top:10px">
+          Autor i koordinator: <span style="color:var(--fg)">Lazar Pejović</span>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="kicker">Kontakt</div>
+        <p class="fine">
+          Email: <a href="mailto:kontakt@geoculture.me">kontakt@geoculture.me</a><br/>
+          uMap: <a href="https://umap.openstreetmap.fr/en/map/oktobar-20_1296017" target="_blank" rel="noopener">otvori mapu</a><br/>
+          Viewer (slike): <a href="https://lazarpejovic.github.io/geoculture-viewer/" target="_blank" rel="noopener">otvori</a>
+        </p>
+        <p class="fine" style="margin-top:12px">
+          <span class="mono">©</span> <span id="year"></span> GeoCulture
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
