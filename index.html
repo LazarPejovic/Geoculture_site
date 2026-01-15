@@ -224,7 +224,19 @@
       .map-frame{height: 68vh;}
       .footer-grid{grid-template-columns:1fr;}
       .brand-logo{height:30px;}
-    }
+    }/* MOBILE FIX — logo spacing & size */
+@media (max-width: 600px){
+  .topbar-inner{
+    padding-left:16px;
+    padding-right:16px;
+  }
+
+  .brand-logo{
+    height:44px;        /* veći logo na telefonu */
+    max-width:220px;
+  }
+}
+
   </style>
 </head>
 
@@ -499,6 +511,7 @@
   </script>
 </body>
 </html>
+
 
 
 
