@@ -588,9 +588,23 @@
     });
   }
 </script>
+<script>
+  const mapWrap = document.querySelector('.map-wrap');
+
+  if(mapWrap){
+    mapWrap.addEventListener('click', () => {
+      mapWrap.classList.add('is-active');
+    });
+
+    document.addEventListener('scroll', () => {
+      mapWrap.classList.remove('is-active');
+    });
+  }
+</script>
 
 </body>
 </html>
+
 
 
 
