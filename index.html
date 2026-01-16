@@ -258,7 +258,43 @@
   .map-frame.is-active{
     pointer-events:auto;   /* aktivira se kad je korisnik tapne */
   }
+}.map-wrap{
+  position:relative;
 }
+
+/* overlay koji hvata tap */
+.map-overlay{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.05);
+  color:var(--fg);
+  font-size:14px;
+  z-index:2;
+  text-align:center;
+}
+
+/* MOBILE MAP FIX */
+@media (max-width: 600px){
+  .map-frame{
+    pointer-events:none;
+  }
+
+  .map-overlay{
+    display:flex;
+  }
+
+  .map-wrap.is-active .map-frame{
+    pointer-events:auto;
+  }
+
+  .map-wrap.is-active .map-overlay{
+    display:none;
+  }
+}
+
   </style>
 </head>
 
@@ -323,13 +359,15 @@
           </div>
         </div>
 
-        <iframe
-         class="map-frame"
-         title="GeoCulture mapa"
-         loading="lazy"
-         src="https://geoculture.me/">
-       </iframe>
+      <div class="map-wrap">
+  <div class="map-overlay">Tapni da aktiviraš mapu</div>
 
+  <iframe
+    class="map-frame"
+    src="https://geoculture.me/"
+    loading="lazy">
+  </iframe>
+</div>
 
         <div class="map-foot">
           <span>© GeoCulture</span>
@@ -553,6 +591,7 @@
 
 </body>
 </html>
+
 
 
 
