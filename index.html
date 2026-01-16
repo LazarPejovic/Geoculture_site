@@ -222,7 +222,7 @@
       nav{display:none;}
       .map-frame{height: 68vh;}
       .footer-grid{grid-template-columns:1fr;}
-      .brand-logo{height:30px;}
+      .brand-logo{height:40px;}
     }/* MOBILE FIX — logo spacing & size */
 @media (max-width: 600px){
   .topbar-inner{
@@ -249,7 +249,16 @@
   text-transform:uppercase;
   color:var(--muted);
 }
+/* MOBILE MAP UX FIX */
+@media (max-width: 600px){
+  .map-frame{
+    pointer-events:none;   /* mapa ne hvata scroll */
+  }
 
+  .map-frame.is-active{
+    pointer-events:auto;   /* aktivira se kad je korisnik tapne */
+  }
+}
   </style>
 </head>
 
@@ -528,8 +537,23 @@
   <script>
     document.getElementById("year").textContent = "© " + new Date().getFullYear();
   </script>
+  <script>
+  const map = document.querySelector('.map-frame');
+
+  if(map){
+    map.addEventListener('click', () => {
+      map.classList.add('is-active');
+    });
+
+    document.addEventListener('scroll', () => {
+      map.classList.remove('is-active');
+    });
+  }
+</script>
+
 </body>
 </html>
+
 
 
 
